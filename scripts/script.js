@@ -1,4 +1,4 @@
-const BASE_URL = 'http://arkonst.ru';
+const BASE_URL = 'https://github.com/arkonst/JavaScript-2/blob/Lesson-3';
 
 
 // Функция запроса / ответа на промисах
