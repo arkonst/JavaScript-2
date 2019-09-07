@@ -1,49 +1,57 @@
 [{
-    "id": "01",
+    "id": "01", 
+	"img": "img/shirt.jpg",
     "title": "Футболка",
-    "price": 150,
-    "img": "../img/shirt.jpg"
+    "price": 150
+    
 },
 {
-    "id": "02",
+    "id": "02", 
+	"img": "img/socks.jpg",
     "title": "Носки",
-    "price": 50,
-    "img": "../img/socks.jpg"
+    "price": 50
+    
 },
 {
-    "id": "03",
+    "id": "03", 
+	"img": "img/shorts.jpg",
     "title": "Шорты",
-    "price": 350,
-    "img": "../img/shorts.jpg"
+    "price": 350
+    
 },
 {
-    "id": "04",
+    "id": "04", 
+	"img": "img/kedy.jpg",
     "title": "Кеды",
-    "price": 1250,
-    "img": "../img/kedy.jpg"
+    "price": 1250
+    
 },
 {
     "id": "05",
+	"img": "img/trus.jpg",
     "title": "Трусы",
-    "price": 150,
-    "img": "../img/trus.jpg"
+    "price": 150
+    
 },
 {
     "id": "06",
+	"img": "img/hat.jpg",
     "title": "Кепка",
-    "price": 450,
-    "img": "../img/hat.jpg"
+    "price": 450
+    
 },
 {
     "id": "07",
+	"img": "img/longsleeve.jpg",
     "title": "Рубашка",
-    "price": 850,
-    "img": "../img/longsleeve.jpg"
+    "price": 850
+    
 },
 {
     "id": "08",
+	"img": "img/coat.jpg",
     "title": "Куртка",
-    "price": 3250,
-    "img": "../img/coat.jpg"
+    "price": 3250
+    
 }
 ]

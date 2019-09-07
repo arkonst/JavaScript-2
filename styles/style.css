@@ -6,11 +6,11 @@ header .main-menu .main-menu-item { text-decoration: none; text-transform: upper
 header .main-menu .main-menu-item:hover, header .main-menu .main-menu-item:focus { color: #6f0505; }
 header .cart-button { margin: 10px 20px; text-align: center; text-decoration: none; font-weight: bold; text-shadow: 0 0px 0 #FFF,1px 0px 1px #000; color: #FFF; background: #5D8EC7; border-top: none; border-bottom: none; border-right: 2px solid #FFF; border-left: 2px solid #FFF; }
 header .cart-button:hover { text-shadow: 0 50px 0 #FFF, 1px 51px 20px #FFF; background: #222; }
-
-.goods-list { display: grid; grid-template-columns: 20% 20% 20% 20%; grid-column-gap: 10px; grid-row-gap: 15px; align-items: center; justify-content: center; margin: 40px auto; }
+main {max-width: 1024px; margin: 0 auto;}
+.goods-list { display: grid; grid-template-columns: repeat(4, 1fr); grid-column-gap: 10px; grid-row-gap: 15px; align-items: center; justify-content: center; margin: 40px auto; }
 .goods-list .goods-item { border: 1px solid #ccc; }
 .goods-list .goods-item .product-image { width: 90%; display: block; margin: 10px auto; }
 .goods-list .goods-item .product-title { font-size: 24px; text-align: center; font-family: Arial, Helvetica, sans-serif; }
 .goods-list .goods-item .product-price { font-size: 18px; color: red; text-align: center; font-family: Arial, Helvetica, sans-serif; }
 
-/*# sourceMappingURL=style.css.map */
+

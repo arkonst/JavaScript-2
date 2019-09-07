@@ -1,6 +1,3 @@
-const BASE_URL = 'https://github.com/arkonst/JavaScript-2/blob/Lesson-3';
-
-
 // Функция запроса / ответа на промисах
 function makeGETRequest(url, callback) {
   return new Promise((resolve, reject) => {
@@ -14,12 +11,12 @@ function makeGETRequest(url, callback) {
 
 
 // Функция для вызова добавления в корзину
-function addBasket(id) {
-  cart.addToBasket(id);
+function addCart(id) {
+  cart.addToCart(id);
 };
 // Функция для вызова удаления из корзины
 function deleteItem(id) {
-  cart.deleteFromBasket(id);
+  cart.deleteFromCart(id);
 };
 // Функция для вызова рендера корзины
 function viewCart() {
@@ -35,7 +32,7 @@ class GoodsItem {
     this.price = price;
   }
   render() {
-    return `<div class="goods-item"><img class="product-image" src="${this.img}" alt="${this.title}" /><h3 class="product-title">${this.title}</h3><p class="product-price">${this.price}</p><button class="addClick" onclick="addBasket(${this.id})">Добавить</button></div>`;
+    return `<div class="goods-item"><img class="product-image" src="${this.img}" alt="${this.title}" /><h3 class="product-title">${this.title}</h3><p class="product-price">${this.price}</p><button class="addClick" onclick="addCart(${this.id})">Добавить</button></div>`;
   }
 }
 
@@ -46,7 +43,7 @@ class GoodsList {
     this.goods = [];
   }
   fetchGoods(url) {
-    makeGETRequest(`${BASE_URL}/response.json`, (item) => {
+    makeGETRequest(`response.json`, (item) => {
       this.goods = JSON.parse(item);
       this.render();
       this.calcTotalSum();
@@ -55,7 +52,7 @@ class GoodsList {
   render() {
     let goodsToShow = '';
     this.goods.forEach((item) => {
-        const goodItem = new GoodItem(item.id, item.title, item.price, item.img);
+        const goodItem = new GoodsItem(item.id, item.img, item.title, item.price);
         goodsToShow += goodItem.render();
     })
     document.querySelector('.goods-list').innerHTML = goodsToShow;
@@ -71,10 +68,25 @@ class GoodsList {
   }
 }
 
+// Класс элемента в корзине
+class GoodInCart extends GoodsItem {
+  constructor(id, img, title, price, count = 1) {    
+    super(id, img, title, price);
+    this.count = count;    
+  }
+  // Рендер товара в корзине
+  render() {
+    return `<div class="cart-item">    
+    <span class="cart-item-title">${this.title}</span>
+    <span class="cart-item-price">${this.price}</span>
+	<span class="cart-item-count">${this.count}</span>
+    <button class='deleteItem' onclick='deleteItem(${this.id})'>&times;</button></div>`;
+} 
+}
 
 // Класс для корзины
-class Cart extends GoodsList {
-  
+class Cart extends GoodsList {   
+   
   // Добавление товара в корзину (привязываем на нажатие кнопки)
   addToCart(id) {
     let toCart;
@@ -117,7 +129,7 @@ calcCartSum() {
  render() {
   let cartContents = '';
   this.goods.forEach((item) => {
-      const goodItem = new CartItem(item.title, item.price);
+      const goodItem = new GoodInCart(item.id, item.img, item.title, item.price);
       cartContents += goodItem.render();
   })
   document.querySelector('.goods-list').innerHTML = cartContents;
@@ -125,23 +137,10 @@ calcCartSum() {
   }
 }
 
-// Класс элемента в корзине
-class GoodInCart extends GoodsItem {
-  constructor(title = 'Название товара', price = 'Нет цены', count = 1) {    
-    super(title, price);
-    this.count = count;    
-  }
-  // Рендер товара в корзине
-  render() {
-    return `<div class="basket-item">
-    <span class="cart-item-title">${this.title}</span>
-    <span class="cart-item-price">${this.price}</span>
-    <button class='deleteItem' onclick='deleteItem(${this.id})'>&times;</button></div>`;
-} 
-}
 
 
 const list = new GoodsList('.goods-list');
+const cart = new Cart();
 list.fetchGoods('response.json');
 list.render();
 
