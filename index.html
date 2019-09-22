@@ -14,8 +14,8 @@
         <header>
             <div class="container">
                 <div class="search">
-                    <input type="search" v-on:keydown.enter="filterGoods()" v-model="searchLine" placeholder="Type and press enter">
-                    <!--<button v-on:click="filterGoods()">Поиск</button>-->
+                    <input type="search" v-on:keydown.enter="filterGoods()" v-model.trim="searchLine" placeholder="Type and press enter">
+                    <button @click="filterGoods()">Поиск</button>
                 </div>
                 <nav class="main-menu">
                     <a href="#" class="main-menu-item">Menu Item</a>
