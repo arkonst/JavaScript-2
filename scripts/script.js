@@ -1,9 +1,8 @@
-
 Vue.component('goods-item', {
     props: ['good'],  
     methods: {
         add() {
-          this.$emit('add', this.good.id);
+          this.$emit('add', this.good);
         }
       },  
     template: `    
@@ -71,8 +70,11 @@ Vue.component('cart', {
     }),
     methods: {
         viewCart() {
-            this.isVisibleCart = !this.isVisibleCart;
+            this.isVisibleCart = !this.isVisibleCart;            
         }
+    },    
+    created() {
+        this.$emit('fetch');
     },
     template: `
     <div class="cart">
@@ -80,13 +82,14 @@ Vue.component('cart', {
         <transition name="fade">
             <aside class="basket-list flex-column" v-if="isVisibleCart">
                 <h4>Корзина</h4>
-                    <div class="basket-item d-flex flex-row"  v-for="good in goods">
+                    <div class="basket-item d-flex flex-row"  v-for="(good, id) in goods">
                         <img :src="good.img" :alt="good.title">
-                            <h6>{{good.title}}</h6>
-                            <p class="h6">{{good.price}}</p>
-                            <button class="btn btn-secondary" :id="good.id" @click="deleteItem(event)">&times;</button>
-                            </div>
-                            <small class="totalCart">{{totalPriceMessage}}</small>
+                        <h6>{{good.title}}</h6>
+                        <p class="h6">{{good.price}}</p>
+                        <p class="h6">{{ good.count }}</p>
+                        <button class="btn btn-secondary" @click="$emit('remove', id)">&times;</button>
+                    </div>
+                           
             </aside> 
         </transition>
     </div>
@@ -131,7 +134,7 @@ const app = new Vue({
         },
     },
     mounted() {
-        this.makeGETRequest(`response.json`).then((goods) => {
+        this.makeGETRequest('/catalogData').then((goods) => {
             this.goods = goods;
             console.log(goods);
         }).catch(err => this.addError(err));
@@ -144,49 +147,30 @@ const app = new Vue({
                 if (index > -1) this.errors.splice(index, 1);
             }, 3000);
         },
-        addToCart(productId) {
-            console.log('add product', productId);
-          },
-        calcAllGoods() {
-            let totalPrice = 0;
-            this.basketGoods.forEach((good) => {
-                if (good.price !== undefined) {
-                    totalPrice += good.price;
-                }
-            });
-            this.totalPriceMessage = 'Cумма товаров в корзине: ' + totalPrice;
-            this.totalPriceCoin = totalPrice;
+        async addToCart(product) {
+            try {
+                this.basketGoods = await this.makePOSTRequest('/addToCart', product);
+            } catch (err) {
+                this.addError(err)
+            }      
+                        
         },
-        addToBasket(id) {
-            let toBasket;
-            this.goods.forEach(function(item) {
-                if(id == item.id) {
-                    toBasket = {
-                        id: item.id,
-                        title: item.title,
-                        price: item.price,
-                        img: item.img
-                    }
-                }
-            });
-            this.basketGoods.push(toBasket);
-            this.calcAllGoods();
+        async removeGoodFromCart(id) {
+            try {
+                this.basketGoods = await this.makeDELETERequest(`/cart/${id}`);
+            } catch (err) {
+                this.addError(err)
+            }            
         },
-        
-        deleteFromBasket(id) {
-            let getIdElemen;
-            this.basketGoods.forEach(function(item, i) {
-                let thisId = item.id;
-                if(id == thisId) {
-                    getIdElemen = i;
-                }
+        async getCart() {
+            try {
+                this.basketGoods = await this.makeGETRequest('/cart');
+            } catch (err) {
+                this.addError(err)
+            }
+           
+        },
                 
-            });
-            this.basketGoods.splice(getIdElemen, 1);
-            this.calcAllGoods();
-        },
-        
-        
         makeGETRequest(url) {
             return new Promise((resolve, reject) => {
                 const xhr = window.XMLHttpRequest ? new window.XMLHttpRequest() : new window.ActiveXObject('Microsoft.XMLHTTP');
@@ -209,6 +193,57 @@ const app = new Vue({
 
                 xhr.open('GET', url);
                 xhr.send();
+            });
+        },
+
+        makePOSTRequest(url, data) {
+            return new Promise((resolve, reject) => {
+                const xhr = window.XMLHttpRequest ? new window.XMLHttpRequest() : new window.ActiveXObject('Microsoft.XMLHTTP');
+
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4) {
+                        try {
+                            const response = JSON.parse(xhr.responseText);
+                            if (xhr.status !== 200) reject(response);
+                            resolve(response);
+                        } catch(e) {
+                            reject(e);
+                        }
+                    }
+                };
+
+                xhr.onerror = function (e) {
+                    reject(e);
+                };
+
+                xhr.open('POST', url);
+                xhr.setRequestHeader('Content-type', 'application/json; charset=UTF-8');
+                xhr.send(JSON.stringify(data));
+            });
+        },
+        makeDELETERequest(url, data) {
+            return new Promise((resolve, reject) => {
+                const xhr = window.XMLHttpRequest ? new window.XMLHttpRequest() : new window.ActiveXObject('Microsoft.XMLHTTP');
+
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4) {
+                        try {
+                            const response = JSON.parse(xhr.responseText);
+                            if (xhr.status !== 200) reject(response);
+                            resolve(response);
+                        } catch(e) {
+                            reject(e);
+                        }
+                    }
+                };
+
+                xhr.onerror = function (e) {
+                    reject(e);
+                };
+
+                xhr.open('DELETE', url);
+                xhr.setRequestHeader('Content-type', 'application/json; charset=UTF-8');
+                xhr.send(JSON.stringify(data));
             });
         }
     }
