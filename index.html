@@ -20,7 +20,7 @@
                     <a href="#" class="main-menu-item">Menu Item</a>
                     <a href="#" class="main-menu-item">Menu Item</a>                    
                 </nav>
-                <cart :goods="basketGoods"></cart>
+                <cart :goods="basketGoods" @fetch="getCart" @remove="removeGoodFromCart"></cart>
             </div>
         </header>
         <main class="container">
